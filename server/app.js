@@ -107,8 +107,9 @@ app.post("/register", async (request, reply) => {
 
 //google login route
 app.post("/googlelogin", async (request, reply) => {
-  //get the token from the request
   let { code } = request.body;
+  const currentDb = db.db();
+  const profiles = currentDb.collection("profiles");
 
   //get the access token from google
   let token = await fetch(`https://oauth2.googleapis.com/token`, {
@@ -124,6 +125,23 @@ app.post("/googlelogin", async (request, reply) => {
   });
   let tokenJson = await token.json();
 
+  let result = await profiles.findOne({
+    client_access_token: tokenJson.access_token,
+  });
+  if (result) {
+    return reply.send({
+      success: true,
+      token: jwt.sign(
+        {
+          id: result._id,
+          username: result.name,
+        },
+        process.env.JWT_SECRET
+      ),
+      username: result.name,
+    });
+  }
+
   //get the user profile from google
   let profile = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
     headers: {
@@ -132,7 +150,33 @@ app.post("/googlelogin", async (request, reply) => {
   });
   let profileJson = await profile.json();
 
-  console.log(profileJson);
+  result = await profiles.insertOne({
+    name: profileJson.name,
+    password: null,
+    email: profileJson.email,
+    client_id: profileJson.id,
+    client_access_token: tokenJson.access_token,
+  });
+
+  //get the user from the database
+  if (result) {
+    return reply.send({
+      success: true,
+      token: jwt.sign(
+        {
+          id: result._id,
+          username: result.name,
+        },
+        process.env.JWT_SECRET
+      ),
+      username: result.name,
+    });
+  }
+
+  return reply.status(403).send({
+    success: false,
+    message: "Invalid credentials",
+  });
 });
 
 export default app;

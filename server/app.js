@@ -35,7 +35,7 @@ app.get("/nasaimage", async (request, reply) => {
 });
 
 //login route
-app.get("/login", async (request, reply) => {
+app.post("/login", async (request, reply) => {
   const currentDb = db.db();
   const { name, password } = request.body;
 
@@ -63,7 +63,7 @@ app.get("/login", async (request, reply) => {
 });
 
 //register route
-app.get("/register", async (request, reply) => {
+app.post("/register", async (request, reply) => {
   const { name, password, email } = request.body;
   const currentDb = db.db();
 

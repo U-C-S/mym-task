@@ -49,17 +49,17 @@ export function LoginForm(props: PaperProps) {
     };
 
     let res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/${formType}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/${formType}`,
       fetchOpts
     );
     let resData = await res.json();
 
     console.log(resData);
     if (resData.success) {
-      localStorage.setItem("token", resData.data.token);
-      localStorage.setItem("userName", resData.data.username);
+      localStorage.setItem("token", resData.token);
+      localStorage.setItem("userName", resData.username);
       // setAuth({ userName: resData.data.username, token: resData.data.token });
-      // Router.push(`/me`);
+      // Router.push(`/home`);
     }
   };
 
@@ -83,7 +83,7 @@ export function LoginForm(props: PaperProps) {
             <TextInput
               required
               label="Email"
-              placeholder="hello@films.com"
+              placeholder="hellofromspace@gmail.com"
               value={form.values.email}
               onChange={(event) =>
                 form.setFieldValue("email", event.currentTarget.value)

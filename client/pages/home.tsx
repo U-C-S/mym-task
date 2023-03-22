@@ -4,13 +4,14 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import {
   Affix,
-  Card,
   Container,
   Image,
   Title,
   Text,
   createStyles,
-  Stack,
+  Popover,
+  Button,
+  Flex,
 } from "@mantine/core";
 import { AuthContext } from "../components/contexts/authContext";
 
@@ -43,22 +44,26 @@ const Home: NextPage = () => {
   }, []);
 
   return (
-    <Container p={10}>
-      <Container h={"100%"}>
+    <Container p={10} h="95vh">
+      <Title order={1} color="red" align="center" mb={10}>
+        Astronomy Picture of the Day ({nasaImage?.date})
+      </Title>
+      <Flex justify="center" align="center">
         <Image src={nasaImage?.url} alt={nasaImage?.title} radius="md" />
-      </Container>
-
-      <Affix position={{ bottom: 10, left: 10 }}>
-        <Container className={classes.image_info}>
-          <Title order={2} color="red">
-            {nasaImage?.title}
-          </Title>
-          <Text size={11}>{nasaImage?.explanation}</Text>
-        </Container>
-      </Affix>
+      </Flex>
 
       <Affix position={{ bottom: 10, right: 10 }}>
-        <Stack></Stack>
+        <Popover position="top" withArrow shadow="md" width={600}>
+          <Popover.Target>
+            <Button>More Info</Button>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <Title order={2} color="red" underline>
+              {nasaImage?.title}
+            </Title>
+            <Text size={11}>{nasaImage?.explanation}</Text>
+          </Popover.Dropdown>
+        </Popover>
       </Affix>
     </Container>
   );

@@ -106,8 +106,33 @@ app.post("/register", async (request, reply) => {
 });
 
 //google login route
-app.get("/googlelogin", async (request, reply) => {
-  reply.send({ message: "Hello from ficition-logs api" });
+app.post("/googlelogin", async (request, reply) => {
+  //get the token from the request
+  let { code } = request.body;
+
+  //get the access token from google
+  let token = await fetch(`https://oauth2.googleapis.com/token`, {
+    method: "POST",
+    body: JSON.stringify({
+      code,
+      client_id:
+        "370903540691-il70h6047bp1c2hc79fmo1sgql1hst82.apps.googleusercontent.com",
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      redirect_uri: "http://localhost:3000/googlelogin",
+      grant_type: "authorization_code",
+    }),
+  });
+  let tokenJson = await token.json();
+
+  //get the user profile from google
+  let profile = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+    headers: {
+      Authorization: `Bearer ${tokenJson.access_token}`,
+    },
+  });
+  let profileJson = await profile.json();
+
+  console.log(profileJson);
 });
 
 export default app;

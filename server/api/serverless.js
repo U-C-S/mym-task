@@ -12,7 +12,4 @@ app.get("/", async (request, reply) => {
   reply.send({ message: "Hello from ficition-logs api" });
 });
 
-export default async (req, res) => {
-  await app.ready();
-  app.server.emit("request", req, res);
-};
+export default app;

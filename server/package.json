@@ -1,7 +1,8 @@
 {
   "name": "server",
+  "type": "module",
   "scripts": {
-    "start": "node bin/www.js",
+    "start": "node index.js",
     "start:dev": "nodemon bin/www.js"
   },
   "dependencies": {

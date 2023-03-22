@@ -1,6 +1,6 @@
 import express from "express";
 import * as dotenv from "dotenv";
-import init from "../index";
+import init from "../app.js";
 
 dotenv.config();
 

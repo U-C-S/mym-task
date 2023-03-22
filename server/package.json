@@ -2,7 +2,7 @@
   "name": "server",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
+    "start": "node appx.js",
     "start:dev": "nodemon bin/www.js"
   },
   "dependencies": {

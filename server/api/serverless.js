@@ -12,4 +12,6 @@ app.get("/", async (request, reply) => {
   reply.send({ message: "Hello from ficition-logs api" });
 });
 
-export default app;
+export default async (req, res) => {
+  app(req, res);
+};

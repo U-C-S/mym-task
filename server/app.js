@@ -1,10 +1,21 @@
-import express from "express";
+import bcrypt from "bcrypt";
+import express, { json } from "express";
+import cors from "cors";
+import helmet from "helmet";
 import { config } from "dotenv";
 import db from "./db.js";
 
 config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+app.use(json());
+app.use(helmet());
 
 app.get("/nasaimage", async (request, reply) => {
   const currentDb = db.db();
@@ -24,12 +35,67 @@ app.get("/nasaimage", async (request, reply) => {
 
 //login route
 app.get("/login", async (request, reply) => {
-  reply.send({ message: "Hello from ficition-logs api" });
+  const currentDb = db.db();
+  const { name, password } = request.body;
+
+  const users = currentDb.collection("users");
+  let result = await users.findOne({ name });
+
+  if (result && (await bcrypt.compare(password, result.password))) {
+    return reply.send({
+      success: true,
+      token: await reply.jwtSign({
+        id: result._id,
+        username: name,
+      }),
+      username: name,
+    });
+  }
+
+  return reply.status(403).send({
+    success: false,
+    message: "Invalid credentials",
+  });
 });
 
 //register route
 app.get("/register", async (request, reply) => {
-  reply.send({ message: "Hello from ficition-logs api" });
+  const { name, password, email } = request.body;
+  const currentDb = db.db();
+
+  const users = currentDb.collection("users");
+  let result = await users.findOne({ name });
+  if (result) {
+    return reply.status(400).send({
+      success: false,
+      message: "Username already exists",
+    });
+  }
+
+  let hashedpassword = await bcrypt.hash(password, 10);
+  let profile = await currentDb.collection("profiles").insertOne({
+    name,
+    password: hashedpassword,
+    email,
+  });
+
+  if (profile.acknowledged) {
+    return reply.send({
+      success: true,
+      message: "Success",
+      data: {
+        token: await reply.jwtSign({
+          id: profile.insertedId,
+          username: name,
+        }),
+        username: name,
+      },
+    });
+  }
+  return reply.status(400).send({
+    success: false,
+    message: "Invalid credentials",
+  });
 });
 
 //google login route

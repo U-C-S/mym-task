@@ -63,10 +63,30 @@ export function LoginForm(props: PaperProps) {
     }
   };
 
+  const loginWithGoogle = async () => {
+    let params = new URLSearchParams({
+      client_id:
+        "370903540691-il70h6047bp1c2hc79fmo1sgql1hst82.apps.googleusercontent.com",
+      scope: "profile email openid",
+      redirect_uri: "http://localhost:3000/googlelogin",
+      response_type: "code",
+      prompt: "select_account",
+    });
+    const googleLoginUrl = new URL(
+      `https://accounts.google.com/o/oauth2/v2/auth/identifier?${params}`
+    );
+
+    window.location.href = googleLoginUrl.toString();
+  };
+
   return (
     <Paper radius="md" p="xl" withBorder {...props}>
       <Group spacing={"xs"} grow style={{ marginBottom: "12px" }}>
-        <Button style={{ height: "42px", padding: "0 8px" }} color={"dark"}>
+        <Button
+          style={{ height: "42px", padding: "0 8px" }}
+          color={"dark"}
+          onClick={loginWithGoogle}
+        >
           <Image
             src="/Google_ G _Logo.svg"
             width={26}

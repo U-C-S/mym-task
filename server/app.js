@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import { config } from "dotenv";
 import db from "./db.js";
+import jwt from "jsonwebtoken";
 
 config();
 
@@ -38,16 +39,19 @@ app.get("/login", async (request, reply) => {
   const currentDb = db.db();
   const { name, password } = request.body;
 
-  const users = currentDb.collection("users");
-  let result = await users.findOne({ name });
+  const profiles = currentDb.collection("profiles");
+  let result = await profiles.findOne({ name });
 
   if (result && (await bcrypt.compare(password, result.password))) {
     return reply.send({
       success: true,
-      token: await reply.jwtSign({
-        id: result._id,
-        username: name,
-      }),
+      token: jwt.sign(
+        {
+          id: result._id,
+          username: name,
+        },
+        process.env.JWT_SECRET
+      ),
       username: name,
     });
   }
@@ -63,8 +67,8 @@ app.get("/register", async (request, reply) => {
   const { name, password, email } = request.body;
   const currentDb = db.db();
 
-  const users = currentDb.collection("users");
-  let result = await users.findOne({ name });
+  const profiles = currentDb.collection("profiles");
+  let result = await profiles.findOne({ name: name });
   if (result) {
     return reply.status(400).send({
       success: false,
@@ -84,10 +88,13 @@ app.get("/register", async (request, reply) => {
       success: true,
       message: "Success",
       data: {
-        token: await reply.jwtSign({
-          id: profile.insertedId,
-          username: name,
-        }),
+        token: jwt.sign(
+          {
+            id: profile.insertedId,
+            username: name,
+          },
+          process.env.JWT_SECRET
+        ),
         username: name,
       },
     });

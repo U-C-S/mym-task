@@ -4,7 +4,6 @@ import { useForm } from "@mantine/form";
 import {
   TextInput,
   PasswordInput,
-  Text,
   Paper,
   Group,
   PaperProps,
@@ -15,11 +14,12 @@ import {
   Image,
   Stack,
 } from "@mantine/core";
-// import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "./contexts/authContext";
+import Router from "next/router";
 
 export function LoginForm(props: PaperProps) {
   const [formType, toggleFormType] = useToggle(["login", "register"]);
-  // const { setAuth } = useContext(AuthContext);
+  const { setAuth } = useContext(AuthContext);
 
   const form = useForm({
     initialValues: {
@@ -58,8 +58,8 @@ export function LoginForm(props: PaperProps) {
     if (resData.success) {
       localStorage.setItem("token", resData.token);
       localStorage.setItem("userName", resData.username);
-      // setAuth({ userName: resData.data.username, token: resData.data.token });
-      // Router.push(`/home`);
+      setAuth({ userName: resData.username, token: resData.token });
+      Router.push(`/home`);
     }
   };
 

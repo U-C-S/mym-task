@@ -1,12 +1,13 @@
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
+import { AuthContextProvider } from "../components/contexts/authContext";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
 
   return (
-    <>
+    <AuthContextProvider>
       <Head>
         <meta
           name="viewport"
@@ -26,6 +27,6 @@ export default function App(props: AppProps) {
       >
         <Component {...pageProps} />
       </MantineProvider>
-    </>
+    </AuthContextProvider>
   );
 }

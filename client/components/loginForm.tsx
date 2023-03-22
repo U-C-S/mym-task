@@ -65,6 +65,18 @@ export function LoginForm(props: PaperProps) {
 
   return (
     <Paper radius="md" p="xl" withBorder {...props}>
+      <Group spacing={"xs"} grow style={{ marginBottom: "12px" }}>
+        <Button style={{ height: "42px", padding: "0 8px" }} color={"dark"}>
+          <Image
+            src="/Google_ G _Logo.svg"
+            width={26}
+            style={{ paddingRight: "8px" }}
+          />
+          &nbsp;&nbsp; Login with Google
+        </Button>
+      </Group>
+
+      <Divider label="or" labelPosition="center" />
       <form onSubmit={form.onSubmit(submitEvent)}>
         <Stack>
           {formType === "register" && (

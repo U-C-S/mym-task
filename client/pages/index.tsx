@@ -88,9 +88,9 @@ const useStyles = createStyles((theme) => ({
 export default function Page() {
   const { classes } = useStyles();
 
-  useEffect(async () => {
-    let x = await fetch("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
-    let y = 
+  useEffect(() => {
+    let x = fetch("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
+    // let y =
   }, []);
   // const { authData } = useContext(AuthContext);
 

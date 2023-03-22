@@ -68,7 +68,7 @@ export function LoginForm(props: PaperProps) {
       client_id:
         "370903540691-il70h6047bp1c2hc79fmo1sgql1hst82.apps.googleusercontent.com",
       scope: "profile email openid",
-      redirect_uri: "http://localhost:3000/googlelogin",
+      redirect_uri: window.location.origin + "/googlelogin",
       response_type: "code",
       prompt: "select_account",
     });

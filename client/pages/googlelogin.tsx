@@ -8,7 +8,7 @@ function GoogleLogin() {
   useEffect(() => {
     const { code } = router.query;
     if (code) {
-      fetch("http://localhost:3300/googlelogin", {
+      fetch(process.env.NEXT_PUBLIC_API_URL + "/googlelogin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

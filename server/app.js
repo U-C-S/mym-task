@@ -24,11 +24,15 @@ app.get("/nasaimage", async (request, reply) => {
   let result = await img.findOne({ key: "nasaimage" });
   let value = result?.value;
 
-  if (!value) {
+  if (!value || new Date(value.date).getDate() !== new Date().getDate()) {
     let x = await fetch("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
     let value = await x.json();
 
-    await img.insertOne({ key: "nasaimage", value });
+    await img.replaceOne(
+      { key: "nasaimage" },
+      { key: "nasaimage", value },
+      { upsert: true }
+    );
   }
 
   reply.json(value);

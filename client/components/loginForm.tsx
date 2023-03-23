@@ -26,7 +26,6 @@ export function LoginForm(props: PaperProps) {
       email: "",
       name: "",
       password: "",
-      terms: true,
     },
 
     // validationRules: {
@@ -135,16 +134,6 @@ export function LoginForm(props: PaperProps) {
               "Password should include at least 8 characters"
             }
           />
-
-          {formType === "register" && (
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) =>
-                form.setFieldValue("terms", event.currentTarget.checked)
-              }
-            />
-          )}
         </Stack>
 
         <Group position="apart" mt="xl">
